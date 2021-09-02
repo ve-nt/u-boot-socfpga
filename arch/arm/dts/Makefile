@@ -547,6 +547,7 @@ dtb-$(CONFIG_TARGET_AM3517_EVM) += am3517-evm.dtb
 dtb-$(CONFIG_TARGET_THUNDERX_88XX) += thunderx-88xx.dtb
 
 dtb-$(CONFIG_ARCH_SOCFPGA) +=				\
+	socfpga_agilex_n6010.dtb			\
 	socfpga_agilex_socdk.dtb			\
 	socfpga_agilex_socdk_nand.dtb                   \
 	socfpga_agilex_socdk_qspi.dtb			\
