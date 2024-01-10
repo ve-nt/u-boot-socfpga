@@ -36,20 +36,20 @@
 	compatible = "jedec,spi-nor";
 	spi-tx-bus-width = <4>;
 	spi-rx-bus-width = <4>;
-	u-boot,dm-pre-reloc;
+	bootph-all;
 	/delete-property/ cdns,read-delay;
 };
 
 &flash1 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &i3c0 {
-    u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &i3c1 {
-    u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &mmc {
@@ -57,12 +57,12 @@
 	bus-width = <4>;
 	sd-uhs-sdr50;
 	cap-mmc-highspeed;
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &combophy0 {
 	status = "okay";
-	u-boot,dm-pre-reloc;
+	bootph-all;
 	cdns,phy-use-ext-lpbk-dqs = <1>;
 	cdns,phy-use-lpbk-dqs = <1>;
 	cdns,phy-use-phony-dqs = <1>;
@@ -106,27 +106,27 @@
 };
 
 &nand {
-    u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &timer0 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &timer1 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &timer2 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &timer3 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 &watchdog0 {
-	u-boot,dm-pre-reloc;
+	bootph-all;
 };
 
 #if !defined(CONFIG_SOCFPGA_SECURE_VAB_AUTH)
