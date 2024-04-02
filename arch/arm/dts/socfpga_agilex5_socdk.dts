@@ -194,7 +194,7 @@
 };
 
 &gmac0 {
-	status = "disabled";
+	status = "okay";
 	phy-mode = "rgmii";
 	phy-handle = <&emac0_phy0>;
 
