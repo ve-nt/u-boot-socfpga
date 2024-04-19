@@ -2,7 +2,7 @@
 /*
  * U-Boot additions
  *
- * Copyright (C) 2019-2022 Intel Corporation <www.intel.com>
+ * Copyright (C) 2019-2024 Intel Corporation <www.intel.com>
  */
 
 #include "socfpga_soc64_fit-u-boot.dtsi"
@@ -462,9 +462,7 @@
 
 &sdr {
 	compatible = "intel,sdr-ctl-agilex5";
-	reg = <0x18000000 0x400000>,
-	      <0x18400000 0x400000>,
-	      <0x18800000 0x400000>;
+	reg = <0x18000000 0x400000>;
 	resets = <&rst DDRSCH_RESET>;
 	bootph-all;
 };
