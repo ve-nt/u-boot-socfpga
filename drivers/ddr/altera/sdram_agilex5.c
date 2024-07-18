@@ -33,11 +33,12 @@ DECLARE_GLOBAL_DATA_PTR;
 					F2SDRAM_SIDEBAND_FLAGOUTSET0
 #define SIDEBANDMGR_FLAGOUTSTATUS0_REG	SOCFPGA_F2SDRAM_MGR_ADDRESS +\
 					F2SDRAM_SIDEBAND_FLAGOUTSTATUS0
+
 #define BOOT_SCRATCH_COLD3_REG	(socfpga_get_sysmgr_addr() +\
 				 SYSMGR_SOC64_BOOT_SCRATCH_COLD3)
+
 #define PORT_EMIF_CONFIG_OFFSET 4
 #define EMIF_PLL_MASK	GENMASK(19, 16)
-#define MEMORY_BANK_MAX_COUNT 3
 
 #define IO96B0_DUAL_PORT_MASK		BIT(0)
 #define IO96B0_DUAL_EMIF_MASK		BIT(1)
@@ -55,17 +56,6 @@ enum reset_type {
 phys_addr_t io96b_csr_reg_addr[] = {
 	0x18400000, /* IO96B_0 CSR registers address */
 	0x18800000  /* IO96B_1 CSR registers address */
-};
-
-struct dram_bank_info_s {
-	phys_addr_t start;
-	phys_size_t max_size;
-};
-
-struct dram_bank_info_s dram_bank_info[MEMORY_BANK_MAX_COUNT] = {
-	{0x80000000, 0x80000000},	/* Memory Bank 0 */
-	{0x880000000, 0x780000000},	/* Memory Bank 1 */
-	{0x8800000000, 0x7800000000}	/* Memory Bank 2 */
 };
 
 static enum reset_type get_reset_type(u32 reg)
@@ -320,7 +310,7 @@ int sdram_mmr_init_full(struct udevice *dev)
 		return -ENXIO;
 	}
 
-	if (gd->ram_size > 0 && gd->ram_size != hw_size) {
+	if (gd->ram_size != hw_size) {
 		printf("DDR: Warning: DRAM size from device tree (%lld MiB)\n",
 		       gd->ram_size >> 20);
 		printf(" mismatch with hardware (%lld MiB).\n",
@@ -331,39 +321,6 @@ int sdram_mmr_init_full(struct udevice *dev)
 		printf("DDR: Error: DRAM size from device tree is greater\n");
 		printf(" than hardware size.\n");
 		hang();
-	}
-
-	if (gd->ram_size == 0 && hw_size > 0) {
-		phys_size_t remaining_size, size_counter = 0;
-		u8 config_dram_banks;
-
-		if (CONFIG_NR_DRAM_BANKS > MEMORY_BANK_MAX_COUNT) {
-			printf("DDR: Warning: CONFIG_NR_DRAM_BANKS(%d) is bigger than Max Memory Bank count(%d).\n",
-			       CONFIG_NR_DRAM_BANKS, MEMORY_BANK_MAX_COUNT);
-			printf(" Max Memory Bank count is in use instead of CONFIG_NR_DRAM_BANKS.\n");
-			config_dram_banks = MEMORY_BANK_MAX_COUNT;
-		} else {
-			config_dram_banks = CONFIG_NR_DRAM_BANKS;
-		}
-
-		for (i = 0; i < config_dram_banks; i++) {
-			remaining_size = hw_size - size_counter;
-			if (remaining_size <= dram_bank_info[i].max_size) {
-				bd.bi_dram[i].start = dram_bank_info[i].start;
-				bd.bi_dram[i].size = remaining_size;
-				debug("Memory bank[%d]  Starting address: 0x%llx  size: 0x%llx\n",
-				      i, bd.bi_dram[i].start, bd.bi_dram[i].size);
-				break;
-			}
-
-			bd.bi_dram[i].start = dram_bank_info[i].start;
-			bd.bi_dram[i].size = dram_bank_info[i].max_size;
-			debug("Memory bank[%d]  Starting address: 0x%llx  size: 0x%llx\n",
-			      i, bd.bi_dram[i].start, bd.bi_dram[i].size);
-			size_counter += bd.bi_dram[i].size;
-		}
-
-		gd->ram_size = hw_size;
 	}
 
 	printf("%s: %lld MiB\n", io96b_ctrl->ddr_type, gd->ram_size >> 20);
